@@ -63,7 +63,7 @@
         <thead>
             <tr>
                 <th class="d-none">ID</th>
-                <th>ID Cliente</th>
+                <th>Nombre</th>
                 <th>Fecha</th>
                 <th>Total</th>
                 <th>Estado</th>
@@ -74,7 +74,7 @@
             <c:forEach items="${pedidos}" var="pedido">
                 <tr>
                     <td class="d-none">${pedido.id}</td>
-                    <td>${pedido.idCliente}</td>
+                    <td>${pedido.nombreCliente}</td>
                     <td>${pedido.fecha}</td>
                     <td>${pedido.total}</td>
                     <td>${pedido.estado}</td>

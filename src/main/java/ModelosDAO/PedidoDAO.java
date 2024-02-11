@@ -27,27 +27,28 @@ public class PedidoDAO {
     }
 
     public List<Pedido> consultaGeneral() {
-        List<Pedido> listaPedidos = new ArrayList<>();
-        String sql = "SELECT * FROM pedidos";
+    List<Pedido> listaPedidos = new ArrayList<>();
+    String sql = "SELECT p.*, c.nombre AS nombre_cliente FROM pedidos p " +
+                 "INNER JOIN clientes c ON p.id_cliente = c.id";
 
-        try (PreparedStatement ps = CN.getConnection().prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Pedido pedido = new Pedido();
-                pedido.setId(rs.getInt("id"));
-                pedido.setIdCliente(rs.getInt("id_cliente"));
-                pedido.setFecha(rs.getDate("fecha"));
-                pedido.setTotal(rs.getDouble("total"));
-                pedido.setEstado(rs.getInt("estado"));
+    try (PreparedStatement ps = CN.getConnection().prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            Pedido pedido = new Pedido();
+            pedido.setId(rs.getInt("id"));
+            pedido.setNombreCliente(rs.getString("nombre_cliente"));
+            pedido.setFecha(rs.getDate("fecha"));
+            pedido.setTotal(rs.getDouble("total"));
+            pedido.setEstado(rs.getInt("estado"));
 
-                listaPedidos.add(pedido);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            listaPedidos.add(pedido);
         }
-
-        return listaPedidos;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return listaPedidos;
+}
 
     public boolean agregar(Pedido pedido) {
         this.sql = "INSERT INTO pedidos (id_cliente, fecha, total, estado) VALUES (?,?,?,?)";
