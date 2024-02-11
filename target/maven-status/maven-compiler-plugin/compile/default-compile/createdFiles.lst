@@ -1,0 +1,10 @@
+Modelos\Cliente.class
+ModelosDAO\ClienteDAO.class
+db\cn.class
+paolo\laboratorio01\resources\JavaEE8Resource.class
+Controllers\ClienteController.class
+ModelosDAO\PedidoDAO.class
+paolo\laboratorio01\JAXRSConfiguration.class
+Controllers\GraficoController.class
+Controllers\PedidoController.class
+Modelos\Pedido.class
