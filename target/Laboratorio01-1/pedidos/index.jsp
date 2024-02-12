@@ -76,9 +76,15 @@
                     <td class="d-none">${pedido.id}</td>
                     <td>${pedido.nombreCliente}</td>
                     <td>${pedido.fecha}</td>
-                    <td>${pedido.total}</td>
-                    <td>${pedido.estado}</td>
+                    <td>${pedido.total} $</td>
                     <td>
+                        <c:choose>
+                            <c:when test="${pedido.estado eq 1}">Activo</c:when>
+                            <c:when test="${pedido.estado eq 2}">Cancelado</c:when>
+                            <c:when test="${pedido.estado eq 3}">Finalizado</c:when>
+                            <c:otherwise>Desconocido</c:otherwise>
+                        </c:choose>
+                    </td>                    <td>
                         <a href="pedidoseditar?id=${pedido.id}" class="btn btn-primary">
                             <i class="fas fa-pencil-alt"></i> Editar
                         </a>
