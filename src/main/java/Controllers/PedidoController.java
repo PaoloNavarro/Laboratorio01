@@ -119,41 +119,51 @@ public class PedidoController extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    private void mostrarFormularioEditarPedido(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String idPedidoStr = request.getParameter("id");
+   private void mostrarFormularioEditarPedido(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    HttpSession session = request.getSession();
+    String idPedidoStr = request.getParameter("id");
 
-        // Verificar si el ID es válido (puedes agregar validaciones adicionales)
-        if (idPedidoStr != null && !idPedidoStr.isEmpty()) {
-            try {
-                int idPedido = Integer.parseInt(idPedidoStr);
+    // Verificar si el ID es válido (puedes agregar validaciones adicionales)
+    if (idPedidoStr != null && !idPedidoStr.isEmpty()) {
+        try {
+            int idPedido = Integer.parseInt(idPedidoStr);
 
-                // Lógica para obtener los datos del pedido desde la base de datos
-                Pedido pedido = pedidoDAO.buscarPedidoPorId(idPedido);
+            // Lógica para obtener los datos del pedido desde la base de datos
+            Pedido pedido = pedidoDAO.buscarPedidoPorId(idPedido);
 
-                if (pedido != null) {
-                    // Pasar los datos del pedido a la vista de edición
-                    request.setAttribute("pedido", pedido);
+            if (pedido != null) {
+                // Pasar los datos del pedido a la vista de edición
+                request.setAttribute("pedido", pedido);
+                
+                //datos del cliente
+                List<Cliente> listaClientes = clienteDAO.consultaGeneral();
+                session.setAttribute("clientes", listaClientes);
+                
+                // Convertir la fecha a un formato adecuado antes de enviarla al formulario
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String fechaFormateada = dateFormat.format(pedido.getFecha());
+                request.setAttribute("fechaFormateada", fechaFormateada);
 
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("pedidos/editar.jsp");
-                    dispatcher.forward(request, response);
-                } else {
-                    // Manejo de error si el pedido no existe
-                    session.setAttribute("errorMessage", "Error al cargar editar pedido");
-                    response.sendRedirect("pedidos?error=true");
-                }
-            } catch (NumberFormatException e) {
-                // Manejo de error si el ID no es un número válido
+                RequestDispatcher dispatcher = request.getRequestDispatcher("pedidos/editar.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                // Manejo de error si el pedido no existe
                 session.setAttribute("errorMessage", "Error al cargar editar pedido");
                 response.sendRedirect("pedidos?error=true");
             }
-        } else {
-            // Manejo de error si no se proporciona un ID válido en la ruta
+        } catch (NumberFormatException e) {
+            // Manejo de error si el ID no es un número válido
             session.setAttribute("errorMessage", "Error al cargar editar pedido");
             response.sendRedirect("pedidos?error=true");
         }
+    } else {
+        // Manejo de error si no se proporciona un ID válido en la ruta
+        session.setAttribute("errorMessage", "Error al cargar editar pedido");
+        response.sendRedirect("pedidos?error=true");
     }
+}
+
 
     private void crearPedido(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException, SQLException, ParseException, java.text.ParseException {
