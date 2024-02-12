@@ -86,8 +86,12 @@ public class PedidoController extends HttpServlet {
             break;
 
             case "/pedidoseditar":
+            {
                 editarPedido(request, response);
+            }
                 break;
+
+
             default:
                 // Lógica para otras rutas si es necesario
                 break;
@@ -212,42 +216,54 @@ public class PedidoController extends HttpServlet {
 
 
 
+   private void editarPedido(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    HttpSession session = request.getSession();
 
-    private void editarPedido(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
+    // Obtener los datos del formulario HTML
+    int idPedido = Integer.parseInt(request.getParameter("idPedido"));
+    int idCliente = Integer.parseInt(request.getParameter("idCliente"));
 
-        // Obtener los datos del formulario HTML
-        int idPedido = Integer.parseInt(request.getParameter("id"));
-        int idCliente = Integer.parseInt(request.getParameter("idCliente"));
-        // Ajusta la obtención y conversión de la fecha según tu formulario
-        // Date fecha = ...; 
+    // Ajusta la obtención y conversión de la fecha según tu formulario
+    String fechaStr = request.getParameter("fecha");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    java.util.Date fechaUtil = null;
 
-        // Ajusta según los campos de tu formulario y modelo de Pedido
-        double total = Double.parseDouble(request.getParameter("total"));
-        int estado = Integer.parseInt(request.getParameter("estado"));
-
-        // Crear un objeto Pedido con los datos del formulario
-        Pedido pedido = new Pedido();
-        pedido.setId(idPedido);
-        pedido.setIdCliente(idCliente);
-        // Asigna la fecha que obtuviste del formulario
-        // pedido.setFecha(fecha);
-        pedido.setTotal(total);
-        pedido.setEstado(estado);
-
-        // Llamar al método editarPedido de tu PedidoDAO
-        boolean exito = pedidoDAO.actualizarPedido(pedido); // Manejo de la excepción de SQL si es necesario
-        if (exito) {
-            // La actualización fue exitosa, redirige a la página de pedidos
-            session.setAttribute("successMessage", "Pedido actualizado con éxito");
-            response.sendRedirect("pedidos");
-        } else {
-            // La actualización falló, puedes mostrar un mensaje de error o redirigir a una página de error
-            session.setAttribute("errorMessage", "Error al actualizar el pedido");
-            response.sendRedirect("pedidos");
-        }
+    try {
+        fechaUtil = dateFormat.parse(fechaStr);
+    }catch (java.text.ParseException ex) {
+        Logger.getLogger(PedidoController.class.getName()).log(Level.SEVERE, null, ex);
     }
+        // Manejo de error si la fecha no se puede parsear
+        // O maneja el error según tu lógica
+
+    // Convertir a java.sql.Date
+    java.sql.Date fechaSql = new java.sql.Date(fechaUtil.getTime());
+
+    // Ajusta según los campos de tu formulario y modelo de Pedido
+    double total = Double.parseDouble(request.getParameter("total"));
+    int estado = Integer.parseInt(request.getParameter("estado"));
+
+    // Crear un objeto Pedido con los datos del formulario
+    Pedido pedido = new Pedido();
+    pedido.setId(idPedido);
+    pedido.setIdCliente(idCliente);
+    pedido.setFecha(fechaSql);
+    pedido.setTotal(total);
+    pedido.setEstado(estado);
+
+    // Llamar al método editarPedido de tu PedidoDAO
+    boolean exito = pedidoDAO.actualizarPedido(pedido); // Manejo de la excepción de SQL si es necesario
+    if (exito) {
+        // La actualización fue exitosa, redirige a la página de pedidos
+        session.setAttribute("successMessage", "Pedido actualizado con éxito");
+        response.sendRedirect("pedidos");
+    } else {
+        // La actualización falló, puedes mostrar un mensaje de error o redirigir a una página de error
+        session.setAttribute("errorMessage", "Error al actualizar el pedido");
+        response.sendRedirect("pedidos");
+    }
+}
 
     private void eliminarPedido(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
