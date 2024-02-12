@@ -4,11 +4,16 @@ import Modelos.Cliente;
 import Modelos.Pedido;
 import ModelosDAO.PedidoDAO;
 import ModelosDAO.ClienteDAO;
+import com.google.protobuf.TextFormat.ParseException;
 
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -63,7 +68,7 @@ public class PedidoController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
 
         String action = request.getServletPath();
 
@@ -74,7 +79,9 @@ public class PedidoController extends HttpServlet {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                     throw new ServletException("Error al crear pedido", ex);
-                }
+                } catch (java.text.ParseException ex) {
+                Logger.getLogger(PedidoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             }
             break;
 
@@ -149,24 +156,27 @@ public class PedidoController extends HttpServlet {
     }
 
     private void crearPedido(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
-        HttpSession session = request.getSession();
+        throws ServletException, IOException, SQLException, ParseException, java.text.ParseException {
+    HttpSession session = request.getSession();
 
-        // Obtener los datos del formulario HTML
-        // Ajusta según los campos de tu formulario y modelo de Pedido
-        int idCliente = Integer.parseInt(request.getParameter("idCliente"));
-        // Ajusta la obtención y conversión de la fecha según tu formulario
-        // Date fecha = ...; 
+    // Obtener los datos del formulario HTML
+    int idCliente = Integer.parseInt(request.getParameter("idCliente"));
 
-        // Ajusta según los campos de tu formulario y modelo de Pedido
+    try {
+        // Utiliza SimpleDateFormat para parsear la fecha desde el formato del formulario
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date fechaUtil = dateFormat.parse(request.getParameter("fecha"));
+
+        // Convertir a java.sql.Date
+        java.sql.Date fechaSql = new java.sql.Date(fechaUtil.getTime());
+
         double total = Double.parseDouble(request.getParameter("total"));
         int estado = Integer.parseInt(request.getParameter("estado"));
 
         // Crear un objeto Pedido con los datos del formulario
         Pedido nuevoPedido = new Pedido();
         nuevoPedido.setIdCliente(idCliente);
-        // Asigna la fecha que obtuviste del formulario
-        // nuevoPedido.setFecha(fecha);
+        nuevoPedido.setFecha(fechaSql); // Asigna la fecha convertida a java.sql.Date
         nuevoPedido.setTotal(total);
         nuevoPedido.setEstado(estado);
 
@@ -182,7 +192,16 @@ public class PedidoController extends HttpServlet {
             session.setAttribute("errorMessage", "Error al crear el pedido");
             response.sendRedirect("pedidos");
         }
+    } catch (ParseException e) {
+        e.printStackTrace();
+        // Manejar el caso en el que la fecha no se pueda parsear correctamente
+        session.setAttribute("errorMessage", "Error al parsear la fecha");
+        response.sendRedirect("pedidos");
     }
+}
+
+
+
 
     private void editarPedido(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
