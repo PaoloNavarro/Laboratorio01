@@ -98,7 +98,7 @@
     <!-- Navbar con paleta de colores suaves -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="../EducP/index.jsp">
+            <a class="navbar-brand" href="../Laboratorio01/index.jsp">
                 <img src="https://cdn.pixabay.com/photo/2016/12/20/05/36/store-1919731_1280.png" alt="Logo de la laboratorio" width="40" height="40">
                 Laboratorio01
             </a>
@@ -122,11 +122,10 @@
                                 Graficos
                             </a>
                             <div class="dropdown-menu" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="edadeG">Grafico de edades</a>
-                                <a class="dropdown-item" href="medioG">Medios de informacion </a>
-                                <a class="dropdown-item" href="estudiosG">Grafico de estudios </a>
-                                <a class="dropdown-item" href="primerOG">Grafico primera opcion </a>
+                                <a class="dropdown-item" href="graficoMeses">Grafico de meses</a>
+                                <a class="dropdown-item" href="graficoClientes">Top 10 de cliente </a>
 
+                      
                             </div>
                         </li>
                       

@@ -63,10 +63,11 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/UNICAES_Logo.png/800px-UNICAES_Logo.png" alt="Logo de la Universidad">
     </div>
     <h1 class="university-name">Universidad Católica de El Salvador</h1>
-    <h3 class="parcial">Ejercicio de graficos</h3>
+    <h3 class="parcial">Laboratorio01</h3>
     <h4 class="alumnos-title">Alumnos:</h4>
     <ul class="alumnos-list">
         <li>Navarro Rosales, Paolo Isaac</li>
+         <li>Díaz López, Christian Armando</li>
         <!-- Agrega más alumnos si es necesario -->
     </ul>
     <h4 class="dirigido">Dirigido a: Ing. Ricardo Edgardo Quintanilla Padilla</h4>

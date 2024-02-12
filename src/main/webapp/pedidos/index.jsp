@@ -84,7 +84,8 @@
                             <c:when test="${pedido.estado eq 3}">Finalizado</c:when>
                             <c:otherwise>Desconocido</c:otherwise>
                         </c:choose>
-                    </td>                    <td>
+                    </td>                    
+                    <td>
                         <a href="pedidoseditar?id=${pedido.id}" class="btn btn-primary">
                             <i class="fas fa-pencil-alt"></i> Editar
                         </a>

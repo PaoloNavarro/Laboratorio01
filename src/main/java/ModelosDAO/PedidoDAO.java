@@ -1,5 +1,6 @@
 package ModelosDAO;
 
+import Modelos.ClienteConPedidos;
 import Modelos.Pedido;
 import db.cn;
 import java.sql.Date;
@@ -126,5 +127,57 @@ public class PedidoDAO {
             e.printStackTrace();
             return false;
         }
+    }
+        public List<ClienteConPedidos> obtenerClientesConMasPedidos() {
+            List<ClienteConPedidos> listaClientes = new ArrayList<>();
+            String sql = "SELECT c.id, c.nombre AS nombre_cliente, COUNT(p.id) AS total_pedidos " +
+                         "FROM clientes c " +
+                         "LEFT JOIN pedidos p ON c.id = p.id_cliente " +
+                         "GROUP BY c.id, c.nombre " +
+                         "ORDER BY total_pedidos DESC " +
+                         "LIMIT 10";
+
+            try (PreparedStatement ps = CN.getConnection().prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ClienteConPedidos cliente = new ClienteConPedidos();
+                    cliente.setId(rs.getInt("id"));
+                    cliente.setNombreCliente(rs.getString("nombre_cliente"));
+                    cliente.setTotalPedidos(rs.getInt("total_pedidos"));
+
+                    listaClientes.add(cliente);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return listaClientes;
+        }
+
+
+    public List<Pedido> obtenerTop3MesesConMasPedidos() {
+        List<Pedido> listaTopMeses = new ArrayList<>();
+        String sql = "SELECT p.*, c.nombre AS nombre_cliente FROM pedidos p " +
+                     "INNER JOIN clientes c ON p.id_cliente = c.id " +
+                     "GROUP BY YEAR(p.fecha), MONTH(p.fecha) " +
+                     "ORDER BY COUNT(p.id) DESC LIMIT 3";
+
+        try (PreparedStatement ps = CN.getConnection().prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Pedido pedido = new Pedido();
+                pedido.setId(rs.getInt("id"));
+                pedido.setNombreCliente(rs.getString("nombre_cliente"));
+                pedido.setFecha(rs.getDate("fecha"));
+                pedido.setTotal(rs.getDouble("total"));
+                pedido.setEstado(rs.getInt("estado"));
+
+                listaTopMeses.add(pedido);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaTopMeses;
     }
 }
