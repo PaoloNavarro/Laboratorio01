@@ -61,7 +61,9 @@
     <input type="text" id="telefono" name="telefono" required pattern="\d{8}" title="Ingrese un teléfono válido de 8 dígitos"><br><br>
 
     <label for="email">Email:</label>
-    <input type="text" id="email" name="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Ingrese un correo electrónico válido"><br><br>
+    <input type="text" id="email" name="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Ingrese un correo electrónico válido (ejemplo@dominio.com)">
+    <br><br>
+
 
 
     <input type="submit" value="Guardar cliente">
@@ -101,10 +103,10 @@
         return false;
     }
 
-    if (!/^[A-Za-z0-9\s\-_.,!@#$%^&*()\/]+$/.test(email)) {
-        alert("El campo de email puede contener letras, números, espacios y símbolos como -, _, ., !, @, #, $, %, ^, &, *, / y ().");
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        alert("El email debe tener el formato algo@algo.algo");
         return false;
-    }
+      }
 
     if (!/^[A-Za-z0-9\s\-_.,!@#$%^&*()\/]+$/.test(direccion)) {
         alert("El campo de dirección puede contener letras, números, espacios y símbolos como -, _, ., !, @, #, $, %, ^, &, *, / y ().");

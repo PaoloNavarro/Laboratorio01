@@ -35,13 +35,9 @@ public class GraficoController extends HttpServlet {
         try {
             pedidoDAO = new PedidoDAO();  // Ajusta según tu DAO
             // Lista de la consulta con los datos de pedidos
-            listaPedidos = pedidoDAO.consultaGeneral();  //metodo top 10
-           listaClientes = pedidoDAO.obtenerClientesConMasPedidos();
             // Librería de JSON
             gson = new Gson();
             // Convertir la lista de pedidos a formato JSON
-            jsonPedidos = gson.toJson(listaPedidos);
-            jsonClientes = gson.toJson(listaClientes);
 
         } catch (SQLException ex) {
             Logger.getLogger(GraficoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,6 +64,9 @@ public class GraficoController extends HttpServlet {
     private void mostrarGraficoMeses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Lógica para obtener los datos de los tres meses con más pedidos por año
+            listaPedidos = pedidoDAO.consultaGeneral();  //metodo top 10
+            jsonPedidos = gson.toJson(listaPedidos);
+
         // y enviarlos a la vista
         HttpSession session = request.getSession();
         // Mandamos a la sesión los datos de los pedidos
@@ -82,6 +81,8 @@ public class GraficoController extends HttpServlet {
     private void mostrarGraficoClientes(HttpServletRequest request, HttpServletResponse response)
            throws ServletException, IOException {
            HttpSession session = request.getSession();
+           listaClientes = pedidoDAO.obtenerClientesConMasPedidos();
+            jsonClientes = gson.toJson(listaClientes);
 
        // Mandamos a la sesión los datos de los pedidos
         session.setAttribute("clientesConMasPedidos", listaClientes);
